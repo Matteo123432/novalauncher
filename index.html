@@ -12,7 +12,10 @@
       --text: #ffffff;
       --muted: #aeb9cf;
       --blue: #5fafff;
-      --blue-2: #4585c4;
+      --gaming-blue: #0056b3;
+      --light-blue: #00a2ff;
+      --bar-bg: rgba(10, 20, 35, 0.95);
+      --transition-speed: 0.4s;
     }
 
     * { box-sizing: border-box; }
@@ -134,7 +137,7 @@
 
     .panel-search {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       border: 1px solid #3c4457;
       border-radius: 999px;
       background: #10141c;
@@ -150,24 +153,25 @@
       width: 100%;
       text-align: center;
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       margin: 0;
     }
 
+    /* Bigger game buttons/cards */
     .game-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 18px;
       width: 100%;
-      max-width: 1200px;
+      max-width: 1320px;
       margin: 0 auto;
       padding-bottom: 14px;
     }
 
     .game-card {
       width: 100%;
-      max-width: 240px;
-      min-height: 250px;
+      max-width: 280px;
+      min-height: 290px;
       justify-self: center;
       border: 1px solid var(--line);
       border-radius: 16px;
@@ -194,7 +198,7 @@
 
     .game-card img {
       width: 100%;
-      height: 185px;
+      height: 210px;
       object-fit: cover;
       object-position: center;
       display: block;
@@ -203,11 +207,11 @@
 
     .game-name {
       padding: 12px 12px 14px;
-      font-size: 0.96rem;
+      font-size: 1rem;
       line-height: 1.25;
       text-align: center;
       color: #eaf2ff;
-      font-weight: 600;
+      font-weight: 650;
       flex: 1;
       display: grid;
       place-items: center;
@@ -272,47 +276,76 @@
       background: #000;
     }
 
-    /* Black floating taskbar */
-    .player-top {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 101;
+    /* Top bar style you asked for (without portal text) */
+    #top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: var(--bar-bg);
+      border-bottom: 2px solid var(--gaming-blue);
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: rgba(0, 0, 0, 0.96);
-      border: 1px solid #222;
-      border-radius: 16px;
-      padding: 10px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(2px);
+      padding: 0 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+      transform: translateY(0);
+      transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
-    /* Bigger control buttons */
-    .player-btn {
-      border: 1px solid #3c4f78;
-      background: #111826;
-      color: #fff;
-      border-radius: 12px;
-      width: 68px;
-      height: 56px;
+    #top-bar.hidden { transform: translateY(-100%); }
+
+    .icon-group {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--light-blue);
+      border-radius: 8px;
+      width: 56px;
+      height: 42px;
       cursor: pointer;
       display: grid;
       place-items: center;
-      transition: border-color 0.2s ease, transform 0.15s ease;
+      transition: all 0.2s ease;
+      color: #fff;
+      padding: 0;
     }
 
-    .player-btn .icon-svg {
-      width: 24px;
-      height: 24px;
+    .icon-btn svg {
+      width: 26px;
+      height: 26px;
+      fill: currentColor;
     }
 
-    .player-btn:hover {
-      border-color: var(--blue);
-      transform: translateY(-1px);
+    .icon-btn:hover {
+      background: var(--gaming-blue);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px var(--light-blue);
     }
+
+    #toggle-trigger {
+      position: fixed;
+      top: 60px;
+      left: 20px;
+      background: var(--gaming-blue);
+      color: #fff;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 0 0 10px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 999;
+      transition: transform var(--transition-speed) ease;
+    }
+
+    #top-bar.hidden + #toggle-trigger { transform: translateY(-60px); }
 
     #game-status {
       position: absolute;
@@ -324,7 +357,7 @@
       letter-spacing: 0.08em;
       font-size: 0.72rem;
       background: rgba(0, 0, 0, 0.55);
-      z-index: 102;
+      z-index: 950;
     }
 
     #game-status.hide {
@@ -335,11 +368,10 @@
     @media (max-width: 900px) {
       .view { padding: 16px 16px 90px 16px; }
       .sidebar { right: 16px; }
-      .game-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-      .game-card { min-height: 220px; max-width: none; }
-      .game-card img { height: 160px; }
-      .player-top { top: 10px; }
-      .player-btn { width: 62px; height: 52px; }
+      .game-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+      .game-card { min-height: 240px; max-width: none; }
+      .game-card img { height: 170px; }
+      .icon-btn { width: 52px; height: 40px; }
     }
 
     @media (max-width: 430px) {
@@ -403,21 +435,19 @@
   </div>
 
   <div id="player-overlay">
-    <div class="player-top" role="toolbar" aria-label="Game controls">
-      <button class="player-btn" id="back-home" title="Back" aria-label="Back">
-        <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15 18 9 12l6-6"></path>
-        </svg>
-      </button>
-      <button class="player-btn" id="fullscreen-btn" title="Fullscreen" aria-label="Fullscreen">
-        <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 9V4h5"></path>
-          <path d="M20 9V4h-5"></path>
-          <path d="M4 15v5h5"></path>
-          <path d="M20 15v5h-5"></path>
-        </svg>
-      </button>
+    <div id="top-bar">
+      <div class="icon-group">
+        <button class="icon-btn" id="back-home" title="Back" aria-label="Back">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <button class="icon-btn" id="fullscreen-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+      </div>
     </div>
+
+    <button id="toggle-trigger" type="button">HIDE BAR</button>
+
     <div id="game-status">loading...</div>
     <iframe id="game-frame" allowfullscreen></iframe>
   </div>
@@ -434,11 +464,6 @@
       ]
     };
 
-    const EXTERNAL_GAME_FEEDS = [
-      { kind: "selenite", url: "https://selenite-copy.pages.dev/games.json", base: "https://selenite-copy.pages.dev/" },
-      { kind: "1kh0", url: "https://1kh0.github.io/config/games.json", base: "https://1kh0.github.io/" }
-    ];
-
     const views = {
       home: document.getElementById("home-view"),
       games: document.getElementById("games-view"),
@@ -453,16 +478,20 @@
     const gamesSearch = document.getElementById("games-search");
     const soundsSearch = document.getElementById("sounds-search");
     const gamesMeta = document.getElementById("games-meta");
+
     const overlay = document.getElementById("player-overlay");
     const frame = document.getElementById("game-frame");
     const gameStatus = document.getElementById("game-status");
+
+    const topBar = document.getElementById("top-bar");
+    const toggleTrigger = document.getElementById("toggle-trigger");
     const backHomeBtn = document.getElementById("back-home");
     const fullscreenBtn = document.getElementById("fullscreen-btn");
 
-    const players = new Map();
     let gameObserver = null;
     let soundObserver = null;
     let gameOpenToken = 0;
+    const players = new Map();
 
     function norm(value) {
       return (value || "").toLowerCase().trim();
@@ -529,7 +558,6 @@
       if (nextView === "games") {
         requestAnimationFrame(() => wireObserver(gamesPanel, ".game-card", "game"));
       }
-
       if (nextView === "sounds") {
         requestAnimationFrame(() => wireObserver(soundsPanel, ".sound-btn", "sound"));
       }
@@ -560,16 +588,13 @@
 
     function toAbsolute(base, path) {
       if (!path) return "";
-      try {
-        return new URL(path, base).href;
-      } catch {
-        return "";
-      }
+      try { return new URL(path, base).href; } catch { return ""; }
     }
 
     async function fetchJson(url, timeoutMs = 25000) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeoutMs);
+
       try {
         const res = await fetch(url, { cache: "no-store", signal: controller.signal });
         if (!res.ok) return null;
@@ -621,8 +646,8 @@
       gamesMeta.textContent = "Fetching from both sources...";
 
       const [seleniteRaw, kh0Raw] = await Promise.all([
-        fetchJson(EXTERNAL_GAME_FEEDS[0].url),
-        fetchJson(EXTERNAL_GAME_FEEDS[1].url)
+        fetchJson("https://selenite-copy.pages.dev/games.json"),
+        fetchJson("https://1kh0.github.io/config/games.json")
       ]);
 
       const merged = [
@@ -661,9 +686,7 @@
         image.decoding = "async";
         image.referrerPolicy = "no-referrer";
         image.addEventListener("error", () => {
-          if (fallbackIcon && image.src !== fallbackIcon) {
-            image.src = fallbackIcon;
-          }
+          if (fallbackIcon && image.src !== fallbackIcon) image.src = fallbackIcon;
         });
 
         const name = document.createElement("div");
@@ -673,7 +696,6 @@
         button.appendChild(image);
         button.appendChild(name);
         button.addEventListener("click", () => openGame(game));
-
         fragment.appendChild(button);
       });
 
@@ -703,8 +725,8 @@
         button.style.backgroundColor = color.main;
         button.style.boxShadow = "0 8px 0 " + color.shadow + ", 0 15px 20px rgba(0,0,0,0.12)";
         button.innerHTML = '<span class="btn-label">' + (sound.name || "sound") + "</span>";
-
         button.addEventListener("click", () => playSound(sound.url));
+
         fragment.appendChild(button);
       });
 
@@ -727,15 +749,6 @@
       soundsPanel.scrollTop = 0;
     }
 
-    function showStatus(text) {
-      gameStatus.textContent = text;
-      gameStatus.classList.remove("hide");
-    }
-
-    function hideStatus() {
-      gameStatus.classList.add("hide");
-    }
-
     function getPlayer(url) {
       if (!players.has(url)) {
         const audio = new Audio(url);
@@ -750,6 +763,30 @@
       const audio = getPlayer(url);
       audio.currentTime = 0;
       audio.play().catch(() => {});
+    }
+
+    function showStatus(text) {
+      gameStatus.textContent = text;
+      gameStatus.classList.remove("hide");
+    }
+
+    function hideStatus() {
+      gameStatus.classList.add("hide");
+    }
+
+    function resetTopBar() {
+      topBar.classList.remove("hidden");
+      toggleTrigger.textContent = "HIDE BAR";
+    }
+
+    function toggleBar() {
+      if (topBar.classList.contains("hidden")) {
+        topBar.classList.remove("hidden");
+        toggleTrigger.textContent = "HIDE BAR";
+      } else {
+        topBar.classList.add("hidden");
+        toggleTrigger.textContent = "SHOW BAR";
+      }
     }
 
     async function tryFrameLoad(url, token) {
@@ -769,16 +806,14 @@
 
         frame.onload = () => {
           if (token !== gameOpenToken) return finish(false);
-
           try {
             const href = frame.contentWindow && frame.contentWindow.location ? frame.contentWindow.location.href : "";
             if (href === "about:blank" || href.startsWith("chrome-error://") || href.startsWith("edge-error://")) {
               return finish(false);
             }
           } catch {
-            // Cross-origin loaded. Treat as success.
+            // Cross-origin loaded, treat as success.
           }
-
           finish(true);
         };
 
@@ -791,10 +826,13 @@
       const token = ++gameOpenToken;
 
       overlay.style.display = "block";
+      resetTopBar();
       showStatus("loading...");
       frame.src = "about:blank";
 
-      const attempts = [game.embedUrl, game.sourcePage].filter(Boolean).filter((v, i, arr) => arr.indexOf(v) === i);
+      const attempts = [game.embedUrl, game.sourcePage]
+        .filter(Boolean)
+        .filter((v, i, arr) => arr.indexOf(v) === i);
 
       for (const candidate of attempts) {
         if (token !== gameOpenToken) return;
@@ -814,10 +852,12 @@
       overlay.style.display = "none";
       frame.src = "about:blank";
       hideStatus();
+      resetTopBar();
       setView("games");
     }
 
     backHomeBtn.addEventListener("click", closeGame);
+    toggleTrigger.addEventListener("click", toggleBar);
 
     fullscreenBtn.addEventListener("click", () => {
       if (document.fullscreenElement) {
