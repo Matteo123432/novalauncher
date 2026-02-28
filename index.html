@@ -206,64 +206,6 @@
       margin: 0;
     }
 
-    .hot-wrap {
-      width: 100%;
-      max-width: 1320px;
-      margin: 0 auto 16px;
-      padding: 12px;
-      border: 1px solid #2f446b;
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(18, 28, 46, 0.85), rgba(13, 20, 34, 0.92));
-    }
-
-    .hot-title {
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      font-size: 0.95rem;
-      color: #9ecbff;
-      margin: 0 0 10px;
-      text-transform: uppercase;
-    }
-
-    .hot-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-      gap: 10px;
-    }
-
-    .hot-card {
-      border: 1px solid #3c5789;
-      background: #0f192b;
-      color: #fff;
-      border-radius: 12px;
-      cursor: pointer;
-      padding: 0;
-      overflow: hidden;
-      transition: transform 0.15s ease, border-color 0.2s ease;
-    }
-
-    .hot-card:hover {
-      transform: translateY(-2px);
-      border-color: #68bbff;
-    }
-
-    .hot-card img {
-      width: 100%;
-      height: 100px;
-      object-fit: cover;
-      display: block;
-      background: #0b111d;
-    }
-
-    .hot-card span {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 700;
-      padding: 8px;
-      text-align: center;
-      line-height: 1.2;
-    }
-
     .game-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -275,6 +217,7 @@
     }
 
     .game-card {
+      position: relative;
       width: 100%;
       max-width: 280px;
       min-height: 290px;
@@ -309,6 +252,22 @@
       object-position: center;
       display: block;
       background: #0b111d;
+    }
+
+    .hot-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+      background: linear-gradient(135deg, #ff6a00, #ff2d55);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      border-radius: 999px;
+      padding: 4px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 6px 14px rgba(255, 85, 60, 0.45);
     }
 
     .game-name {
@@ -496,14 +455,12 @@
       .game-card { min-height: 240px; max-width: none; }
       .game-card img { height: 170px; }
       .icon-btn { width: 52px; height: 40px; }
-      .hot-card img { height: 90px; }
     }
 
     @media (max-width: 430px) {
       .game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .sound-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
       .sound-btn { height: 96px; border-radius: 18px; font-size: 0.78rem; }
-      .hot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -548,12 +505,6 @@
           <input id="games-search" class="panel-search" type="text" placeholder="Loading games..." />
           <p id="games-meta" class="games-meta"></p>
         </div>
-
-        <div id="hot-wrap" class="hot-wrap" hidden>
-          <div class="hot-title">HOT Games</div>
-          <div class="hot-grid" id="hot-grid"></div>
-        </div>
-
         <div class="game-grid" id="game-grid"></div>
       </div>
     </section>
@@ -583,43 +534,38 @@
     <button id="toggle-trigger" type="button">HIDE BAR</button>
 
     <div id="game-status">loading...</div>
-    <iframe id="game-frame" allowfullscreen></iframe>
+    <iframe
+      id="game-frame"
+      allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share"
+      allowfullscreen
+    ></iframe>
   </div>
 
   <script>
     const data = {
       games: [],
+      // Replace this with your full 300-sound array if needed.
       sounds: [
-        {"id":1,"name":"FAHHHHHHHHHHHHHH","url":"https://www.myinstants.com/media/sounds/fahhhhhhhhhhhhhh.mp3","keyHint":""},
-        {"id":2,"name":"VINE BOOM SOUND","url":"https://www.myinstants.com/media/sounds/vine-boom.mp3","keyHint":""},
-        {"id":3,"name":"Fahhh","url":"https://www.myinstants.com/media/sounds/fahhh_KcgAXfs.mp3","keyHint":""},
-        {"id":4,"name":"FAAAH","url":"https://www.myinstants.com/media/sounds/faaah.mp3","keyHint":""},
-        {"id":5,"name":"rizz sound effect","url":"https://www.myinstants.com/media/sounds/rizz-sound-effect.mp3","keyHint":""},
-        {"id":6,"name":"Fart","url":"https://www.myinstants.com/media/sounds/dry-fart.mp3","keyHint":""},
-        {"id":7,"name":"YOURE PHONE IS RINGING","url":"https://www.myinstants.com/media/sounds/youre-phone-is-ringing.mp3","keyHint":""},
-        {"id":8,"name":"Among Us role reveal sound","url":"https://www.myinstants.com/media/sounds/among-us-role-reveal-sound.mp3","keyHint":""},
-        {"id":9,"name":"Chicken on tree screaming","url":"https://www.myinstants.com/media/sounds/chicken-on-tree-screaming.mp3","keyHint":""},
-        {"id":10,"name":"Anime Wow","url":"https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3","keyHint":""},
-        {"id":11,"name":"Hub Intro Sound","url":"https://www.myinstants.com/media/sounds/hub-intro-sound.mp3","keyHint":""},
-        {"id":12,"name":"Dexter meme","url":"https://www.myinstants.com/media/sounds/dexter-meme.mp3","keyHint":""},
-        {"id":13,"name":"oi oi oe oi a eye eye","url":"https://www.myinstants.com/media/sounds/oi-oi-oe-oi-a-eye-eye.mp3","keyHint":""},
-        {"id":14,"name":"SpongeBob Fail","url":"https://www.myinstants.com/media/sounds/spongebob-fail.mp3","keyHint":""},
-        {"id":15,"name":"Apple Pay","url":"https://www.myinstants.com/media/sounds/applepay.mp3","keyHint":""},
-        {"id":16,"name":"indian song","url":"https://www.myinstants.com/media/sounds/indian-song.mp3","keyHint":""},
-        {"id":17,"name":"BRUH","url":"https://www.myinstants.com/media/sounds/movie_1.mp3","keyHint":""},
-        {"id":18,"name":"dun dun dunnnnnnnn","url":"https://www.myinstants.com/media/sounds/dun-dun-dun-sound-effect-brass_8nFBccR.mp3","keyHint":""},
-        {"id":19,"name":"rip my granny she got hit by a bazooka","url":"https://www.myinstants.com/media/sounds/rip-my-granny-she-got-hit-by-a-bazooka.mp3","keyHint":""},
-        {"id":20,"name":"gey echo","url":"https://www.myinstants.com/media/sounds/gey-echo.mp3","keyHint":""},
-        {"id":21,"name":"Smoke Detector Beep","url":"https://www.myinstants.com/media/sounds/smoke-detector-beep.mp3","keyHint":""},
-        {"id":22,"name":"yes!(lara voice)","url":"https://www.myinstants.com/media/sounds/yes-lara-voice.mp3","keyHint":""},
-        {"id":23,"name":"Bone Crack","url":"https://www.myinstants.com/media/sounds/bone-crack.mp3","keyHint":""},
-        {"id":24,"name":"romanceeeeeeeeeeeeee","url":"https://www.myinstants.com/media/sounds/romanceeeeeeeeeeeeee.mp3","keyHint":""},
-        {"id":25,"name":"The Undertaker Bell","url":"https://www.myinstants.com/media/sounds/undertakers-bell_2UwFCIe.mp3","keyHint":""},
-        {"id":26,"name":"We are charlie kirk loud asf","url":"https://www.myinstants.com/media/sounds/we-are-charlie-kirk-loud-asf.mp3","keyHint":""},
-        {"id":27,"name":"Tuco: GET OUT","url":"https://www.myinstants.com/media/sounds/tuco-get-out.mp3","keyHint":""},
-        {"id":28,"name":"ACK","url":"https://www.myinstants.com/media/sounds/ack.mp3","keyHint":""},
-        {"id":29,"name":"Daddyy Chill","url":"https://www.myinstants.com/media/sounds/daddyy-chill.mp3","keyHint":""},
-        {"id":30,"name":"Fart Button","url":"https://www.myinstants.com/media/sounds/perfect-fart.mp3","keyHint":""}
+        {"id":1,"name":"FAHHHHHHHHHHHHHH","url":"https://www.myinstants.com/media/sounds/fahhhhhhhhhhhhhh.mp3"},
+        {"id":2,"name":"VINE BOOM SOUND","url":"https://www.myinstants.com/media/sounds/vine-boom.mp3"},
+        {"id":3,"name":"Fahhh","url":"https://www.myinstants.com/media/sounds/fahhh_KcgAXfs.mp3"},
+        {"id":4,"name":"FAAAH","url":"https://www.myinstants.com/media/sounds/faaah.mp3"},
+        {"id":5,"name":"rizz sound effect","url":"https://www.myinstants.com/media/sounds/rizz-sound-effect.mp3"},
+        {"id":6,"name":"Fart","url":"https://www.myinstants.com/media/sounds/dry-fart.mp3"},
+        {"id":7,"name":"YOURE PHONE IS RINGING","url":"https://www.myinstants.com/media/sounds/youre-phone-is-ringing.mp3"},
+        {"id":8,"name":"Among Us role reveal sound","url":"https://www.myinstants.com/media/sounds/among-us-role-reveal-sound.mp3"},
+        {"id":9,"name":"Chicken on tree screaming","url":"https://www.myinstants.com/media/sounds/chicken-on-tree-screaming.mp3"},
+        {"id":10,"name":"Anime Wow","url":"https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3"},
+        {"id":11,"name":"Hub Intro Sound","url":"https://www.myinstants.com/media/sounds/hub-intro-sound.mp3"},
+        {"id":12,"name":"Dexter meme","url":"https://www.myinstants.com/media/sounds/dexter-meme.mp3"},
+        {"id":13,"name":"oi oi oe oi a eye eye","url":"https://www.myinstants.com/media/sounds/oi-oi-oe-oi-a-eye-eye.mp3"},
+        {"id":14,"name":"SpongeBob Fail","url":"https://www.myinstants.com/media/sounds/spongebob-fail.mp3"},
+        {"id":15,"name":"Apple Pay","url":"https://www.myinstants.com/media/sounds/applepay.mp3"},
+        {"id":16,"name":"indian song","url":"https://www.myinstants.com/media/sounds/indian-song.mp3"},
+        {"id":17,"name":"BRUH","url":"https://www.myinstants.com/media/sounds/movie_1.mp3"},
+        {"id":18,"name":"dun dun dunnnnnnnn","url":"https://www.myinstants.com/media/sounds/dun-dun-dun-sound-effect-brass_8nFBccR.mp3"},
+        {"id":19,"name":"rip my granny she got hit by a bazooka","url":"https://www.myinstants.com/media/sounds/rip-my-granny-she-got-hit-by-a-bazooka.mp3"},
+        {"id":20,"name":"gey echo","url":"https://www.myinstants.com/media/sounds/gey-echo.mp3"}
       ]
     };
 
@@ -628,8 +574,8 @@
         id: 0,
         slug: "five-nights-at-epsteins",
         name: "Five Nights At Epstein's",
-        sourcePage: "https://dmsss69.itch.io/fdsfdsfdf",
-        embedUrl: "https://dmsss69.itch.io/fdsfdsfdf",
+        sourcePage: "https://html-classic.itch.zone/html/15867499/asdd/index.html",
+        embedUrl: "https://html-classic.itch.zone/html/15867499/asdd/index.html",
         fileUrl: "",
         icon: "https://img.itch.zone/aW1nLzI0NTkxMDM1LnBuZw==/original/FsMWrt.png"
       }
@@ -643,6 +589,7 @@
       "cookie clicker",
       "minecraft"
     ];
+    const HOT_TOKEN_SET = new Set(HOT_GAME_TOKENS.map((v) => canon(v)));
 
     const views = {
       home: document.getElementById("home-view"),
@@ -654,8 +601,6 @@
     const navItems = Array.from(document.querySelectorAll(".nav-item"));
     const gameGrid = document.getElementById("game-grid");
     const soundGrid = document.getElementById("sound-grid");
-    const hotWrap = document.getElementById("hot-wrap");
-    const hotGrid = document.getElementById("hot-grid");
 
     const gamesPanel = document.getElementById("games-panel");
     const soundsPanel = document.getElementById("sounds-panel");
@@ -672,7 +617,6 @@
     const backHomeBtn = document.getElementById("back-home");
     const fullscreenBtn = document.getElementById("fullscreen-btn");
 
-    // Background canvas
     const bgCanvas = document.getElementById("bg-canvas");
     const bgCtx = bgCanvas.getContext("2d");
     let bgParticles = [];
@@ -695,6 +639,16 @@
 
     function slugify(value) {
       return norm(value).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "game";
+    }
+
+    function isHotGame(game) {
+      const g = canon(game?.name || "");
+      if (!g) return false;
+      for (const t of HOT_TOKEN_SET) {
+        if (!t) continue;
+        if (g === t || g.includes(t) || t.includes(g)) return true;
+      }
+      return false;
     }
 
     function uniqueGames(list) {
@@ -850,6 +804,13 @@
         button.title = game.name;
         button.setAttribute("aria-label", game.name);
 
+        if (isHotGame(game)) {
+          const badge = document.createElement("span");
+          badge.className = "hot-badge";
+          badge.textContent = "HOT";
+          button.appendChild(badge);
+        }
+
         const image = document.createElement("img");
         const fallbackIcon = getFallbackGameIcon(game);
         image.src = game.icon || fallbackIcon;
@@ -906,79 +867,20 @@
       wireObserver(soundsPanel, ".sound-btn", "sound");
     }
 
-    function findGameByToken(token) {
-      const t = canon(token);
-      return allGames.find((g) => {
-        const n = canon(g.name);
-        return n === t || n.includes(t) || t.includes(n);
-      });
-    }
-
-    function renderHotGames() {
-      hotGrid.innerHTML = "";
-
-      const picked = [];
-      const used = new Set();
-
-      for (const token of HOT_GAME_TOKENS) {
-        const g = findGameByToken(token);
-        if (!g || used.has(g.id)) continue;
-        used.add(g.id);
-        picked.push(g);
-      }
-
-      for (const g of allGames) {
-        if (picked.length >= 8) break;
-        if (used.has(g.id)) continue;
-        used.add(g.id);
-        picked.push(g);
-      }
-
-      if (!picked.length) {
-        hotWrap.hidden = true;
-        return;
-      }
-
-      const frag = document.createDocumentFragment();
-
-      picked.forEach((game) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "hot-card";
-        btn.setAttribute("aria-label", game.name);
-        btn.title = game.name;
-
-        const img = document.createElement("img");
-        const fallbackIcon = getFallbackGameIcon(game);
-        img.src = game.icon || fallbackIcon;
-        img.alt = game.name;
-        img.loading = "lazy";
-        img.addEventListener("error", () => {
-          if (fallbackIcon && img.src !== fallbackIcon) img.src = fallbackIcon;
-        });
-
-        const label = document.createElement("span");
-        label.textContent = game.name;
-
-        btn.appendChild(img);
-        btn.appendChild(label);
-        btn.addEventListener("click", () => openGame(game));
-        frag.appendChild(btn);
-      });
-
-      hotGrid.appendChild(frag);
-      hotWrap.hidden = false;
-    }
-
     function applyGamesFilter() {
       const query = norm(gamesSearch.value);
-      const filtered = query ? allGames.filter((game) => norm(game.name).includes(query)) : allGames;
+      const filtered = query ? allGames.filter((game) => norm(game.name).includes(query)) : [...allGames];
+
+      filtered.sort((a, b) => {
+        const aHot = isHotGame(a) ? 0 : 1;
+        const bHot = isHotGame(b) ? 0 : 1;
+        if (aHot !== bHot) return aHot - bHot;
+        return a.name.localeCompare(b.name);
+      });
+
       gamesMeta.textContent = filtered.length + " / " + allGames.length + " games";
       renderGames(filtered);
       gamesPanel.scrollTop = 0;
-
-      hotWrap.hidden = query.length > 0;
-      if (!query.length) renderHotGames();
     }
 
     function applySoundsFilter() {
@@ -1041,7 +943,7 @@
           resolve(ok);
         };
 
-        const timer = setTimeout(() => finish(false), 10000);
+        const timer = setTimeout(() => finish(false), 12000);
 
         frame.onload = () => {
           if (token !== gameOpenToken) return finish(false);
@@ -1117,7 +1019,6 @@
 
       allGames = uniqueGames(merged);
       applyGamesFilter();
-
       gamesSearch.placeholder = "Search games... (" + allGames.length + ")";
     }
 
@@ -1144,7 +1045,6 @@
 
       for (let i = 0; i < bgParticles.length; i += 1) {
         const p = bgParticles[i];
-
         p.x += p.vx;
         p.y += p.vy;
 
