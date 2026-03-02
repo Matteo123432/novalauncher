@@ -606,6 +606,140 @@
       allowfullscreen
     ></iframe>
   </div>
+  <div id="win11-notification" class="notification-hidden">
+    <div class="notif-header">
+        <svg class="app-icon" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 12.402L35.687 7.533V41.04H0V12.402ZM0 46.961H35.687V80.467L0 75.598V46.961ZM40.313 6.901L88 0V41.04H40.313V6.901ZM40.313 46.961H88V88L40.313 81.099V46.961Z" fill="#00A4EF"/>
+        </svg>
+        <span class="app-name">System</span>
+        <div class="close-btn">✕</div>
+    </div>
+    <div class="notif-body">
+        <h4 class="notif-title">do not share this with anyone you dont trust</h4>
+        <p class="notif-desc">made by matteo</p>
+    </div>
+</div>
+
+<style>
+    #win11-notification {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 360px;
+        border-radius: 8px;
+        background: rgba(36, 36, 36, 0.95); /* Accurate Win 11 dark mode base */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        /* Subtle border to mimic the 3D lighting effect */
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 1px solid rgba(255, 255, 255, 0.12); 
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        font-family: 'Segoe UI Variable', 'Segoe UI', -apple-system, sans-serif;
+        color: #ffffff;
+        z-index: 9999;
+        overflow: hidden;
+        transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.3s ease;
+    }
+
+    .notification-hidden {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    .notification-visible {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .notif-header {
+        display: flex;
+        align-items: center;
+        padding: 12px 12px 4px 16px;
+    }
+
+    .app-icon {
+        width: 14px;
+        height: 14px;
+        margin-right: 8px;
+    }
+
+    .app-name {
+        font-size: 12px;
+        color: #cccccc;
+        flex-grow: 1;
+    }
+
+    .close-btn {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #cccccc;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.1s;
+    }
+
+    .close-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+    }
+
+    .notif-body {
+        padding: 0 16px 16px 16px;
+    }
+
+    .notif-title {
+        margin: 0 0 4px 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: #ffffff;
+    }
+
+    .notif-desc {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #cccccc;
+    }
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const notification = document.getElementById('win11-notification');
+        const closeBtn = notification.querySelector('.close-btn');
+        
+        const winSound = new Audio('https://www.winhistory.de/more/winstart/mp3/win11_notify.mp3');
+
+        // Show after 1 second
+        let hideTimeout;
+        setTimeout(() => {
+            notification.classList.add('notification-visible');
+            notification.classList.remove('notification-hidden');
+            winSound.play().catch(e => console.log("Sound requires user interaction first."));
+
+            // Auto-hide after 5 seconds
+            hideTimeout = setTimeout(() => {
+                closeNotification();
+            }, 5000); 
+
+        }, 1000);
+
+        // Close button functionality
+        closeBtn.addEventListener('click', () => {
+            clearTimeout(hideTimeout);
+            closeNotification();
+        });
+
+        function closeNotification() {
+            notification.classList.remove('notification-visible');
+            notification.classList.add('notification-hidden');
+        }
+    });
+</script>
 
   <script>
     const data = {
